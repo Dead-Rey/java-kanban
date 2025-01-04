@@ -1,10 +1,12 @@
+package model;
+
 import java.util.ArrayList;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private final ArrayList<SubTask> subTasks;
 
     public Epic(String name, String description) {
-        super(name, description,Progress.NEW);
+        super(name, description, Progress.NEW);
         this.subTasks = new ArrayList<>();
 
     }
@@ -13,8 +15,12 @@ public class Epic extends Task{
         updateProgress();
     }
 
-    protected ArrayList<SubTask> getSubtasks(Epic epic) {
-        return epic.subTasks;
+    public void cleanSubtasks() {
+        subTasks.clear();
+    }
+
+    public ArrayList<SubTask> getSubtasks() {
+        return subTasks;
     }
     public void updateProgress() { // Метод обновления эпика
         if (subTasks.isEmpty()) {

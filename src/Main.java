@@ -1,4 +1,8 @@
-
+import controllers.TaskManager;
+import model.Epic;
+import model.Progress;
+import model.SubTask;
+import model.Task;
 
 public class Main {
 
@@ -35,11 +39,15 @@ public class Main {
         SubTask subTask2New = new SubTask("Написать код",
                 "Применить знания полученные при обучении", Progress.DONE,epic1.getId()); // Обновление подзадачи
 
-        taskManager.getAllTasks(); // Вывод всех задач
+        System.out.println(taskManager.getTasks());
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getSubtasks());
         taskManager.deleteTaskById(2); // Удаление задачи по ее ID
         taskManager.updateTask(task1,task1New); // Обновление задачи
         taskManager.updateSubTask(subTask1, subTask1New); // Обновление подзадачи
         taskManager.updateSubTask(subTask2, subTask2New); // Обновление подзадачи
-        taskManager.getAllTasks();  // Вывод всех задач
+        System.out.println(taskManager.getTasks());
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getSubtasks());  // Вывод всех задач
     }
 }

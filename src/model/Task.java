@@ -1,10 +1,12 @@
+package model;
+
 import java.util.Objects;
 
 public class Task {
     private int id;
     private final String name;
     private final String description;
-    private  Progress progress;
+    private Progress progress;
 
 
     public Task(String name, String description, Progress progress) {
@@ -44,7 +46,7 @@ public class Task {
 
     @Override
     public String toString() { // Переопределение метода для адекватной печати имени класса
-        return "ID " + this.getClass().getName() +
+        return this.getClass().getSimpleName() +
                 "{name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", progress=" + progress +

@@ -1,3 +1,9 @@
+package controllers;
+
+import model.Epic;
+import model.SubTask;
+import model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,19 +35,32 @@ public class TaskManager {
         subtasks.put(idCounter++, subtask);
     }
 
-    public void getAllTasks() { // Метод вывода на экран всех задач
-        System.out.println(tasks);
-        System.out.println(epics);
-        System.out.println(subtasks);
+    public ArrayList<Task> getTasks() {  // Метод возврата задач
+        return new ArrayList<>(tasks.values());
+    }
+    public ArrayList<Epic> getEpics() { //Метод возврата эпиков
+        return new ArrayList<>(epics.values());
+    }
+    public ArrayList<SubTask> getSubtasks() { //Метод возврата подзадач
+        return new ArrayList<>(subtasks.values());
     }
 
-    public void deleteAllTasks() { //Удаление всех задач
+    public void deleteTask() { // Удаление всех задач
         tasks.clear();
+    }
+    public void deleteSubtask() {  // Удаление всех подзадач
+        for (Epic epic : epics.values()) {
+            epic.cleanSubtasks(); // Удаление всех подзадач из эпиков
+            epic.updateProgress(); // Обновление прогресса эпиков
+        }
+        subtasks.clear();
+    }
+    public void deleteEpic() { // Удаление эпиков и подзадач как следствие
         epics.clear();
         subtasks.clear();
     }
 
-    public Object getTaskById(int id) { // Получение любой задачи по ID
+    public Task getTaskById(int id) { // Получение любой задачи по ID
         if (tasks.containsKey(id)) {
             return tasks.get(id);
         } else if (subtasks.containsKey(id)) {
@@ -66,7 +85,7 @@ public class TaskManager {
     }
 
         public ArrayList<SubTask> getSubtaskByEpic(Epic epic) { // Получение подзадач определенного эпика
-        return epic.getSubtasks(epic);
+        return epic.getSubtasks();
         }
 
         public void updateTask(Task task, Task taskNew) { // Обновление обычной задачи
@@ -82,7 +101,7 @@ public class TaskManager {
 
     @Override
     public String toString() {
-        return "TaskManager{" + "\n" +
+        return "controllers.TaskManager{" + "\n" +
                 "Tasks=" + tasks + "\n" +
                 "Epics=" + epics + "\n" +
                 "Subtasks=" + subtasks +
