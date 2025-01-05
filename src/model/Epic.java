@@ -15,6 +15,10 @@ public class Epic extends Task {
         updateProgress();
     }
 
+    public void removeSubtask(SubTask subtask) {
+        subTasks.remove(subtask);
+    }
+
     public void cleanSubtasks() {
         subTasks.clear();
     }

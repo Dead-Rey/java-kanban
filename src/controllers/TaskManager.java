@@ -76,11 +76,15 @@ public class TaskManager {
             tasks.remove(id);
         } else
             if (subtasks.containsKey(id)) {
-            subtasks.remove(id);
+                SubTask subtask = subtasks.get(id);
+                Epic epic = epics.get(subtask.getId());
+                epic.removeSubtask(subtask);
+                subtasks.remove(id);
+                epic.updateProgress();
         } else if (epics.containsKey(id) ) {
+                Epic epic = epics.get(id);
+                epic.cleanSubtasks();
                 epics.remove(id);
-            } else {
-                System.out.println("Задача не найдена");
             }
     }
 
