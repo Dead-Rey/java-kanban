@@ -9,6 +9,7 @@ public class Epic extends Task {
         super(name, description, Progress.NEW);
         this.subTasks = new ArrayList<>();
 
+
     }
     public void addSubtask(SubTask subtask) { // Метод добавление подзадачи
         subTasks.add(subtask);

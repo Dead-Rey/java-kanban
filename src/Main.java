@@ -1,4 +1,4 @@
-import controllers.TaskManager;
+import controllers.*;
 import model.Epic;
 import model.Progress;
 import model.SubTask;
@@ -7,7 +7,8 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
+        HistoryManager historyManager = new InMemoryHistoryManager();
 
         Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW);
         Task task2 = new Task("Сделать зарядку", "Зарядка в 9:00", Progress.NEW);
@@ -38,16 +39,13 @@ public class Main {
                 "Понять что нужно сделать",Progress.DONE,epic1.getId()); // Обновление задачи
         SubTask subTask2New = new SubTask("Написать код",
                 "Применить знания полученные при обучении", Progress.DONE,epic1.getId()); // Обновление подзадачи
-
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
+        taskManager.printAllTasks(taskManager);
         taskManager.deleteTaskById(2); // Удаление задачи по ее ID
         taskManager.updateTask(task1,task1New); // Обновление задачи
         taskManager.updateSubTask(subTask1, subTask1New); // Обновление подзадачи
         taskManager.updateSubTask(subTask2, subTask2New); // Обновление подзадачи
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());  // Вывод всех задач
+        taskManager.printAllTasks(taskManager);
     }
+
+
 }
