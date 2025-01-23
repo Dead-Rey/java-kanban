@@ -7,8 +7,9 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
+
         TaskManager taskManager = Managers.getDefault();
-        HistoryManager historyManager = new InMemoryHistoryManager();
+
 
         Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW);
         Task task2 = new Task("Сделать зарядку", "Зарядка в 9:00", Progress.NEW);
@@ -39,13 +40,38 @@ public class Main {
                 "Понять что нужно сделать",Progress.DONE,epic1.getId()); // Обновление задачи
         SubTask subTask2New = new SubTask("Написать код",
                 "Применить знания полученные при обучении", Progress.DONE,epic1.getId()); // Обновление подзадачи
-        taskManager.printAllTasks(taskManager);
+        printAllTasks(taskManager);
         taskManager.deleteTaskById(2); // Удаление задачи по ее ID
         taskManager.updateTask(task1,task1New); // Обновление задачи
         taskManager.updateSubTask(subTask1, subTask1New); // Обновление подзадачи
-        taskManager.updateSubTask(subTask2, subTask2New); // Обновление подзадачи
-        taskManager.printAllTasks(taskManager);
+        taskManager.updateSubTask(subTask2, subTask2New);
+        taskManager.getTaskById(1);
+        taskManager.getTaskById(4);
+        printAllTasks(taskManager);
     }
 
+    public static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Epic epic : manager.getEpics()) {
+            System.out.println(epic);
+
+            for (Task task : manager.getSubtaskByEpic(epic)) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
+    }
 
 }

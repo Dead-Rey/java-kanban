@@ -8,6 +8,8 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
+    private final int MAX_HISTORY_SIZE = 10;
+
    private final List<Task> history = new LinkedList<>();
 
 @Override
@@ -19,6 +21,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
     @Override
     public List<Task> getHistory(){
-        return history;
+        return List.copyOf(history);
     }
 }

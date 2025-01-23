@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager  {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subtasks;
-    HistoryManager historyManager = new InMemoryHistoryManager();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() { // Конструктор для всех типов
         tasks = new HashMap<>();
@@ -45,8 +45,6 @@ public class InMemoryTaskManager implements TaskManager  {
         if (tasks.isEmpty()) {
             return new ArrayList<>();
         }
-        Task task = tasks.values().iterator().next();
-        historyManager.add(task);
         return new ArrayList<>(tasks.values());
     }
     @Override
@@ -54,8 +52,6 @@ public class InMemoryTaskManager implements TaskManager  {
         if (epics.isEmpty()) {
             return new ArrayList<>();
         }
-        Task epic = epics.values().iterator().next();
-        historyManager.add(epic);
         return new ArrayList<>(epics.values());
     }
     @Override
@@ -63,8 +59,6 @@ public class InMemoryTaskManager implements TaskManager  {
         if (subtasks.isEmpty()) {
             return new ArrayList<>();
         }
-        Task subtask = subtasks.values().iterator().next();
-        historyManager.add(subtask);
         return new ArrayList<>(subtasks.values());
     }
 
@@ -87,12 +81,15 @@ public class InMemoryTaskManager implements TaskManager  {
     }
 
     @Override
-    public Task getTaskById(int id) { // Получение любой задачи по ID
+    public Task getTaskById(int id) {// Получение любой задачи по ID
         if (tasks.containsKey(id)) {
+            historyManager.add(tasks.get(id));
             return tasks.get(id);
         } else if (subtasks.containsKey(id)) {
+            historyManager.add(subtasks.get(id));
             return subtasks.get(id);
         } else if (epics.containsKey(id)) {
+            historyManager.add(epics.get(id));
             return epics.get(id);
         }
         return null;
@@ -140,29 +137,7 @@ public class InMemoryTaskManager implements TaskManager  {
         return historyManager.getHistory();
         }
 
-    public void printAllTasks (TaskManager manager){
-        System.out.println("Задачи:");
-        for (Task task : manager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Epic epic : manager.getEpics()) {
-            System.out.println(epic);
 
-            for (Task task : manager.getSubtaskByEpic(epic)) {
-                System.out.println("--> " + task);
-            }
-        }
-        System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
-    }
 
     @Override
     public String toString() {

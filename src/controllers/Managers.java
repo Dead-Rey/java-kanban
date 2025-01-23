@@ -4,16 +4,14 @@ import model.Task;
 
 import java.util.List;
 
-public final class Managers {
-
-    static TaskManager InMemoryTaskManager = new InMemoryTaskManager();
+public class Managers {
 
     public static TaskManager getDefault(){
-        return InMemoryTaskManager;
+        return new InMemoryTaskManager();
     }
 
-    public static List<Task> getDefaultHistory() {
-        return InMemoryTaskManager.getHistory();
+    public static HistoryManager getDefaultHistory() {
+        return new InMemoryHistoryManager();
     }
 }
 
