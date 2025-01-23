@@ -42,23 +42,16 @@ public class InMemoryTaskManager implements TaskManager  {
 
     @Override
     public ArrayList<Task> getTasks() {
-        if (tasks.isEmpty()) {
-            return new ArrayList<>();
-        }
         return new ArrayList<>(tasks.values());
     }
+
     @Override
     public ArrayList<Epic> getEpics() {
-        if (epics.isEmpty()) {
-            return new ArrayList<>();
-        }
         return new ArrayList<>(epics.values());
     }
+
     @Override
     public ArrayList<SubTask> getSubtasks() {
-        if (subtasks.isEmpty()) {
-            return new ArrayList<>();
-        }
         return new ArrayList<>(subtasks.values());
     }
 
@@ -66,6 +59,7 @@ public class InMemoryTaskManager implements TaskManager  {
     public void deleteTask()  { // Удаление всех задач
         tasks.clear();
     }
+
     @Override
     public void deleteSubtask() {  // Удаление всех подзадач
         for (Epic epic : epics.values()) {
@@ -74,6 +68,7 @@ public class InMemoryTaskManager implements TaskManager  {
         }
         subtasks.clear();
     }
+
     @Override
     public void deleteEpic() { // Удаление эпиков и подзадач как следствие
         epics.clear();
