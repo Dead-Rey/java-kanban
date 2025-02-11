@@ -1,4 +1,4 @@
-package test.controllers;
+package tests.controllers;
 
 import controllers.InMemoryTaskManager;
 import controllers.TaskManager;

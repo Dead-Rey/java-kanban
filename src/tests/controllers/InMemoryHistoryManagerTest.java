@@ -1,4 +1,4 @@
-package test.controllers;
+package tests.controllers;
 
 import controllers.InMemoryHistoryManager;
 import model.Progress;
