@@ -1,5 +1,3 @@
-
-
 import main.java.controllers.InMemoryHistoryManager;
 import main.java.controllers.model.Progress;
 import main.java.controllers.model.Task;

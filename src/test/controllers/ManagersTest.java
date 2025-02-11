@@ -1,4 +1,3 @@
-
 import main.java.controllers.Managers;
 import main.java.controllers.TaskManager;
 import main.java.controllers.model.Progress;
