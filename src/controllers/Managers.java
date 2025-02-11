@@ -1,12 +1,8 @@
 package controllers;
 
-import model.Task;
-
-import java.util.List;
-
 public class Managers {
 
-    public static TaskManager getDefault(){
+    public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 
