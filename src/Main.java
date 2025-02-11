@@ -26,7 +26,7 @@ public class Main {
         SubTask subTask2 = new SubTask("Написать код",
                 "Применить знания полученные при обучении", Progress.NEW, epic1.getId());
         SubTask subTask3 = new SubTask("Купить продукты",
-                "Всё необходимое к столу", Progress.NEW, epic2.getId());
+                "Сдать работу", Progress.NEW, epic1.getId());
         taskManager.addSubtask(subTask1);
         taskManager.addSubtask(subTask2);
         taskManager.addSubtask(subTask3); //Добавление подзадач в менеджер
@@ -35,19 +35,31 @@ public class Main {
         epic1.addSubtask(subTask2);
         epic2.addSubtask(subTask3); //Добавление подзадач в эпик
 
-        Task task1New = new Task("Покормить кота", "Насыпать корм в миску", Progress.DONE);
-        SubTask subTask1New = new SubTask("Разобраться с задачей",
-                "Понять что нужно сделать",Progress.DONE,epic1.getId()); // Обновление задачи
-        SubTask subTask2New = new SubTask("Написать код",
-                "Применить знания полученные при обучении", Progress.DONE,epic1.getId()); // Обновление подзадачи
+        taskManager.getTaskById(task1.getId());
+        taskManager.getTaskById(task2.getId());
+        taskManager.getTaskById(epic1.getId());
+        taskManager.getTaskById(epic2.getId());
+        taskManager.getTaskById(task2.getId());
+        taskManager.getTaskById(subTask1.getId());
+        taskManager.getTaskById(subTask2.getId());
+        taskManager.getTaskById(subTask3.getId());
+        taskManager.getTaskById(subTask1.getId());
+
         printAllTasks(taskManager);
-        taskManager.deleteTaskById(2); // Удаление задачи по ее ID
-        taskManager.updateTask(task1,task1New); // Обновление задачи
-        taskManager.updateSubTask(subTask1, subTask1New); // Обновление подзадачи
-        taskManager.updateSubTask(subTask2, subTask2New);
-        taskManager.getTaskById(1);
-        taskManager.getTaskById(4);
+
+        taskManager.getTaskById(task1.getId());
+        taskManager.getTaskById(subTask1.getId());
+
         printAllTasks(taskManager);
+
+        taskManager.deleteTaskById(task1.getId());
+
+        printAllTasks(taskManager);
+
+        taskManager.deleteTaskById(epic1.getId());
+
+        printAllTasks(taskManager);
+
     }
 
     public static void printAllTasks(TaskManager manager) {

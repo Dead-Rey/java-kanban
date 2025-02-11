@@ -3,70 +3,99 @@ package tests.controllers;
 import controllers.InMemoryHistoryManager;
 import model.Progress;
 import model.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryHistoryManagerTest {
+public class InMemoryHistoryManagerTest {
+    private InMemoryHistoryManager historyManager;
 
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-
-    Task task = new Task("TestingHistory_1","TestingHistoryDescription_1", Progress.NEW);
-    Task task2 = new Task("TestingHistory_2","TestingHistoryDescription_2", Progress.NEW);
-    Task task3 = new Task("TestingHistory_3","TestingHistoryDescription_3", Progress.NEW);
-    Task task4 = new Task("TestingHistory_4","TestingHistoryDescription_4", Progress.NEW);
-    Task task5 = new Task("TestingHistory_5","TestingHistoryDescription_4", Progress.NEW);
-    Task task6 = new Task("TestingHistory_6","TestingHistoryDescription_4", Progress.NEW);
-    Task task7 = new Task("TestingHistory_7","TestingHistoryDescription_4", Progress.NEW);
-    Task task8 = new Task("TestingHistory_8","TestingHistoryDescription_4", Progress.NEW);
-    Task task9 = new Task("TestingHistory_9","TestingHistoryDescription_4", Progress.NEW);
-    Task task10 = new Task("TestingHistory_10","TestingHistoryDescription_4", Progress.NEW);
-    Task task11 = new Task("TestingHistory_11","TestingHistoryDescription_4", Progress.NEW);
-
-    //Тест добавления в историю
-    @Test
-    void addHistoryTest() {
-        historyManager.add(task);
-        final List<Task> history = historyManager.getHistory();
-        assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "История не пустая.");
+    @BeforeEach
+    public void setUp() {
+        historyManager = new InMemoryHistoryManager();
     }
 
-    // Наполнение истории 11ю задачами
-    void fillHistory (){
+    @Test
+    public void testAddTaskToHistory() {
+        Task task = new Task("Test Task", "Description", Progress.NEW);
+        task.setId(1);
         historyManager.add(task);
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task, history.get(0));
+    }
+
+    @Test
+    public void testRemoveTaskFromHistory() {
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        task1.setId(1);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        task2.setId(2);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.remove(task1.getId());
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task2, history.get(0));
+    }
+
+    @Test
+    public void testGetEmptyHistory() {
+        List<Task> history = historyManager.getHistory();
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    public void testLinkLast() {
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        task1.setId(1);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        task2.setId(2);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(2, history.size());
+        assertEquals(task1, history.get(0));
+        assertEquals(task2, history.get(1));
+    }
+
+    @Test
+    public void testRemoveNode() {
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        task1.setId(1);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        task2.setId(2);
+        Task task3 = new Task("Test Task 3", "Description", Progress.NEW);
+        task3.setId(3);
+
+        historyManager.add(task1);
         historyManager.add(task2);
         historyManager.add(task3);
-        historyManager.add(task4);
-        historyManager.add(task5);
-        historyManager.add(task6);
-        historyManager.add(task7);
-        historyManager.add(task8);
-        historyManager.add(task9);
-        historyManager.add(task10);
-        historyManager.add(task11);
+        historyManager.remove(task2.getId());
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(2, history.size());
+        assertEquals(task1, history.get(0));
+        assertEquals(task3, history.get(1));
     }
 
-    //Тест, что история наполняется нужными задачами и удаляет первые, при превышении лимита
     @Test
-    void getHistoryTest() {
-        fillHistory();
-        final List<Task> history = historyManager.getHistory();
-        final List<Task> expectedHistory = new ArrayList<>();
-        expectedHistory.add(task2);
-        expectedHistory.add(task3);
-        expectedHistory.add(task4);
-        expectedHistory.add(task5);
-        expectedHistory.add(task6);
-        expectedHistory.add(task7);
-        expectedHistory.add(task8);
-        expectedHistory.add(task9);
-        expectedHistory.add(task10);
-        expectedHistory.add(task11);
-        assertNotNull(history, "История не пустая.");
-        assertArrayEquals(expectedHistory.toArray(), history.toArray());
+    public void testAddSameTask() {
+        Task task = new Task("Test Task", "Description", Progress.NEW);
+        task.setId(1);
+        historyManager.add(task);
+        historyManager.add(task);
+
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task, history.get(0));
     }
 }
