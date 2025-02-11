@@ -1,0 +1,3 @@
+./test/controllers/InMemoryHistoryManagerTest.java
+./test/controllers/InMemoryTaskManagerTest.java
+./test/controllers/ManagersTest.java
