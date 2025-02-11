@@ -1,6 +1,6 @@
-package controllers;
+package main.java.controllers;
 
-import model.Task;
+import main.java.controllers.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

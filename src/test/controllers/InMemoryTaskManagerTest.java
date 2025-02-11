@@ -1,9 +1,11 @@
-package controllers;
 
-import model.Epic;
-import model.Progress;
-import model.SubTask;
-import model.Task;
+
+import main.java.controllers.InMemoryTaskManager;
+import main.java.controllers.TaskManager;
+import main.java.controllers.model.Epic;
+import main.java.controllers.model.Progress;
+import main.java.controllers.model.SubTask;
+import main.java.controllers.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

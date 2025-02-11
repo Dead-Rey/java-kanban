@@ -1,8 +1,11 @@
-import controllers.*;
-import model.Epic;
-import model.Progress;
-import model.SubTask;
-import model.Task;
+package main;
+
+import main.java.controllers.Managers;
+import main.java.controllers.TaskManager;
+import main.java.controllers.model.Epic;
+import main.java.controllers.model.Progress;
+import main.java.controllers.model.SubTask;
+import main.java.controllers.model.Task;
 
 public class Main {
 

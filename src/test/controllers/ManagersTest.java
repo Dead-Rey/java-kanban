@@ -1,7 +1,8 @@
-package controllers;
 
-import model.Progress;
-import model.Task;
+import main.java.controllers.Managers;
+import main.java.controllers.TaskManager;
+import main.java.controllers.model.Progress;
+import main.java.controllers.model.Task;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

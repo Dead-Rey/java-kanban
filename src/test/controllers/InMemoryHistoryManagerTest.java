@@ -1,7 +1,8 @@
-package controllers;
 
-import model.Progress;
-import model.Task;
+
+import main.java.controllers.InMemoryHistoryManager;
+import main.java.controllers.model.Progress;
+import main.java.controllers.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
