@@ -8,9 +8,8 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description, Progress.NEW);
         this.subTasks = new ArrayList<>();
-
-
     }
+
     public void addSubtask(SubTask subtask) { // Метод добавление подзадачи
         subTasks.add(subtask);
         updateProgress();
@@ -27,6 +26,7 @@ public class Epic extends Task {
     public ArrayList<SubTask> getSubtasks() {
         return subTasks;
     }
+
     public void updateProgress() { // Метод обновления эпика
         if (subTasks.isEmpty()) {
             setProgress(Progress.NEW);
