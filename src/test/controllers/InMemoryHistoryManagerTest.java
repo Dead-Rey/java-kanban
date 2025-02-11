@@ -1,6 +1,5 @@
-package tests.controllers;
+package controllers;
 
-import controllers.InMemoryHistoryManager;
 import model.Progress;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;

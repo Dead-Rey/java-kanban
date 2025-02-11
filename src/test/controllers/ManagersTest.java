@@ -1,7 +1,5 @@
-package tests.controllers;
+package controllers;
 
-import controllers.Managers;
-import controllers.TaskManager;
 import model.Progress;
 import model.Task;
 import org.junit.jupiter.api.Test;

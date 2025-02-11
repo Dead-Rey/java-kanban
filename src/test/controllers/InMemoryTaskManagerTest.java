@@ -1,7 +1,5 @@
-package tests.controllers;
+package controllers;
 
-import controllers.InMemoryTaskManager;
-import controllers.TaskManager;
 import model.Epic;
 import model.Progress;
 import model.SubTask;
