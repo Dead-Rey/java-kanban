@@ -95,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager  {
     }
 
     @Override
-    public Task getTaskById(int id) {// Получение любой задачи по ID
+    public Task getTaskById(int id) { // Получение любой задачи по ID
         if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             return tasks.get(id);
