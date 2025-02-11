@@ -50,7 +50,7 @@ public class Task {
                 "{name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", progress=" + progress +
-                '}' + "\n" ;
+                '}' + "\n";
     }
 }
 
