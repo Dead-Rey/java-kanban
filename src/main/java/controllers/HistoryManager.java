@@ -15,9 +15,5 @@ public interface HistoryManager {
     // Метод очистки истории по ID
     void remove(int id);
 
-    void linkLast(Task task);
 
-    List<Task> getTasks();
-
-    void removeNode(Node node);
 }
