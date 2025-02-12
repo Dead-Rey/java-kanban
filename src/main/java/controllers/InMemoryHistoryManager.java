@@ -48,7 +48,6 @@ public class InMemoryHistoryManager implements HistoryManager {
        tail = newNode;
    }
 
-
     List<Task> getTasks() {
        List<Task> tasks = new ArrayList<>();
        Node current = head;
@@ -58,7 +57,6 @@ public class InMemoryHistoryManager implements HistoryManager {
        }
        return tasks;
    }
-
 
     void removeNode(Node node) {
         if (node == null) {
@@ -75,6 +73,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = node.prev;
         }
     }
+
     static class Node {
 
         Task task;
