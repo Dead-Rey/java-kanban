@@ -1,4 +1,4 @@
-package model;
+package main.java.controllers.model;
 
 public enum Progress {
     NEW,

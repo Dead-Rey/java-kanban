@@ -1,8 +1,8 @@
-package controllers;
+package main.java.controllers;
 
-import model.Epic;
-import model.SubTask;
-import model.Task;
+import main.java.controllers.model.Epic;
+import main.java.controllers.model.SubTask;
+import main.java.controllers.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package model;
+package main.java.controllers.model;
 
 public class SubTask extends Task {
 

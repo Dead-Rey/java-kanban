@@ -1,4 +1,4 @@
-package model;
+package main.java.controllers.model;
 
 import java.util.Objects;
 
@@ -50,7 +50,7 @@ public class Task {
                 "{name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", progress=" + progress +
-                '}' + "\n" ;
+                '}' + "\n";
     }
 }
 
