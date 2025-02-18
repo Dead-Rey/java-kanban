@@ -1,5 +1,7 @@
 package main.java.controllers.model;
 
+import main.fileManagers.TaskType;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -51,5 +53,10 @@ public class Epic extends Task {
         } else {
             setProgress(Progress.NEW);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s,%s", getId(), TaskType.EPIC, getName(),getProgress(),getDescription());
     }
 }
