@@ -11,6 +11,11 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager  {
     private static int idCounter = 1;
     private final HashMap<Integer, Task> tasks;
+
+    public static void setIdCounter(int idCounter) {
+        InMemoryTaskManager.idCounter = idCounter;
+    }
+
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subtasks;
     private final HistoryManager historyManager = Managers.getDefaultHistory();

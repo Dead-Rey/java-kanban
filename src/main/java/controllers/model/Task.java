@@ -1,5 +1,7 @@
 package main.java.controllers.model;
 
+import main.fileManagers.TaskType;
+
 import java.util.Objects;
 
 public class Task {
@@ -46,11 +48,15 @@ public class Task {
 
     @Override
     public String toString() { // Переопределение метода для адекватной печати имени класса
-        return this.getClass().getSimpleName() +
-                "{name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", progress=" + progress +
-                '}' + "\n";
+        return String.format("%s,%s,%s,%s,%s", getId(), TaskType.TASK, getName(), getProgress(), getDescription());
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
 
