@@ -1,7 +1,7 @@
 package main.fileManagers;
 
+import main.exception.ManagerSaveException;
 import main.java.controllers.InMemoryTaskManager;
-import main.java.controllers.TaskManager;
 import main.java.controllers.model.Epic;
 import main.java.controllers.model.Progress;
 import main.java.controllers.model.SubTask;
@@ -11,7 +11,44 @@ import java.io.*;
 import java.util.List;
 
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager {
+
+   public static void main(String[] args) {
+        File file = new File("test.csv");
+
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+
+        Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW);
+        Task task2 = new Task("Сделать зарядку", "Зарядка в 9:00", Progress.NEW);
+
+       manager.addTask(task1);
+       manager.addTask(task2);
+
+        Epic epic1 = new Epic("Сделать ФЗ", "Решить задачу");
+        Epic epic2 = new Epic("Отметить новый год", "Найти настроение");
+
+       manager.addEpic(epic1);
+       manager.addEpic(epic2);
+
+       SubTask subTask1 = new SubTask("Разобраться с задачей",
+               "Понять что нужно сделать",Progress.NEW, epic1.getId());
+       SubTask subTask2 = new SubTask("Написать код",
+               "Применить знания полученные при обучении", Progress.NEW, epic1.getId());
+       SubTask subTask3 = new SubTask("Купить продукты",
+               "Сдать работу", Progress.NEW, epic1.getId());
+
+       manager.addSubtask(subTask1);
+       manager.addSubtask(subTask2);
+       manager.addSubtask(subTask3);
+
+       manager.save();
+
+        FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(file);
+
+       if (manager.toString().equals(newManager.toString())) {
+           System.out.println("Всё работает правильно");
+      }
+    }
 
     private final File file;
 
@@ -19,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         this.file = new File(file.getAbsolutePath());
     }
 
-    public void save() {
+    public void save() throws ManagerSaveException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
             writer.write("id,type,name,status,description,epic");
@@ -44,12 +81,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             }
 
         } catch (IOException e) {
-            System.out.println("Ошибка сохранения в файл: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка при записи в файл: " + e.getMessage());
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
+        setIdCounter(1); // У меня тут вопрос. Без этого обновления счётчика ID, задачи записывались с повышенным ID
+                        // Правильно ли я реализовал данное обновление?
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             reader.readLine(); // Пропускаем заголовок
@@ -77,7 +116,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (IOException e) {
-            System.out.println("Ошибка загрузки из файла: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка при чтении файла: " + e.getMessage());
         }
         return manager;
     }
