@@ -91,7 +91,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s", getId(), TaskType.EPIC, getName(),getProgress(),getDescription()
-                ,getDurationInMinutes(),getStartTime());
+        return String.format("%s,%s,%s,%s,%s,%s,%s", getId(), TaskType.EPIC, getName(),getProgress(),getDescription(),
+                getDurationInMinutes(),getStartTime());
     }
 }
