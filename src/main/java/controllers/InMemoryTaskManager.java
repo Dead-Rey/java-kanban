@@ -1,12 +1,11 @@
 package main.java.controllers;
 
+import main.exception.TaskOverlapException;
 import main.java.controllers.model.Epic;
 import main.java.controllers.model.SubTask;
 import main.java.controllers.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager  {
     private static int idCounter = 1;
@@ -27,11 +26,20 @@ public class InMemoryTaskManager implements TaskManager  {
     }
 
     @Override
-    public void addTask(Task task) { // Добавление задачи + присваивание уникального ID
+    public void addTask(Task task) {
         task.setId(idCounter);
         tasks.put(idCounter++, task);
+        Set<Task> prioritizedTasks = getPrioritizedTasks();
+
+        try {
+            doTaskOverlap((TreeSet<Task>) prioritizedTasks); // Проверка перекрытия
+        } catch (TaskOverlapException e) {
+            throw new IllegalArgumentException("Задача пересекается с другой задачей: " + e.getMessage());
+        }
+
 
     }
+
 
    @Override
    public void addEpic(Epic epic) { // Добавление эпика + присваивание уникального ID
@@ -40,7 +48,15 @@ public class InMemoryTaskManager implements TaskManager  {
    }
 
     @Override
-    public void addSubtask(SubTask subtask) { // Добавление подзадачи + присваивание уникального ID
+    public void addSubtask(SubTask subtask) {
+        Set<Task> prioritizedTasks = getPrioritizedTasks();
+
+        try {
+            doTaskOverlap((TreeSet<Task>) prioritizedTasks); // Проверка перекрытия
+        } catch (TaskOverlapException e) {
+            throw new IllegalArgumentException("Подзадача пересекается с существующей подзадачей: " + e.getMessage());
+        }
+
         subtask.setId(idCounter);
         subtasks.put(idCounter++, subtask);
     }
@@ -67,37 +83,42 @@ public class InMemoryTaskManager implements TaskManager  {
 
     @Override
     public void deleteSubtask() {  // Удаление всех подзадач
-        for (SubTask subtask : subtasks.values()) {  // цикл для удаления подзадач из истории
-            int i = subtask.getId();
-            if (historyManager.getHistory().contains(i)) {
-                historyManager.remove(i);
-            }
-        }
-        for (Epic epic : epics.values()) {
+        // Удаление подзадач из истории
+        subtasks.values().stream()
+                .map(SubTask::getId) // Получаем ID подзадач
+                .filter(historyManager.getHistory()::contains) // Фильтруем только те, которые есть в истории
+                .forEach(historyManager::remove); // Удаляем из истории
+
+        // Удаление всех подзадач из эпиков и обновление их прогресса
+        epics.values().forEach(epic -> {
             epic.cleanSubtasks(); // Удаление всех подзадач из эпиков
             epic.updateProgress(); // Обновление прогресса эпиков
-        }
+        });
+
+        // Очистка всех подзадач
         subtasks.clear();
     }
+
 
     @Override
     public void deleteEpic() { // Удаление эпиков и подзадач как следствие
-        for (Epic epic : epics.values()) { // удаление эпиков из истории
-            int i = epic.getId();
-            if (historyManager.getHistory().contains(i)) {
-            historyManager.remove(i);
-            }
-        }
-        for (SubTask subtask : subtasks.values()) { // удаление подзадач из истории
-            int i = subtask.getId();
-            if (historyManager.getHistory().contains(i)) {
-                historyManager.remove(i);
-            }
-        }
+        // Удаление эпиков из истории
+        epics.values().stream()
+                .map(Epic::getId) // Получаем ID эпиков
+                .filter(historyManager.getHistory()::contains) // Фильтруем только те, которые есть в истории
+                .forEach(historyManager::remove); // Удаляем из истории
+
+        // Удаление подзадач из истории
+        subtasks.values().stream()
+                .map(SubTask::getId) // Получаем ID подзадач
+                .filter(historyManager.getHistory()::contains) // Фильтруем только те, которые есть в истории
+                .forEach(historyManager::remove); // Удаляем из истории
+
+        // Очистка всех эпиков и подзадач
         epics.clear();
         subtasks.clear();
-
     }
+
 
     @Override
     public Task getTaskById(int id) { // Получение любой задачи по ID
@@ -131,6 +152,7 @@ public class InMemoryTaskManager implements TaskManager  {
             Epic epic = epics.get(id);
             for (SubTask subtask : epic.getSubtasks()) {
                 historyManager.remove(subtask.getId());
+                subtasks.remove(subtask.getId());
             }
             historyManager.remove(id);
             epic.cleanSubtasks();
@@ -138,26 +160,88 @@ public class InMemoryTaskManager implements TaskManager  {
         }
     }
 
+    public Set<Task> getPrioritizedTasks() {
+        Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+        tasks.values().stream()
+                .filter(task -> task.getStartTime() != null)
+                .forEach(prioritizedTasks::add);
+
+        subtasks.values().stream()
+                .filter(task -> task.getStartTime() != null)
+                .forEach(prioritizedTasks::add);
+        return prioritizedTasks;
+
+    }
+
+    public void doTaskOverlap(TreeSet<Task> prioritizedTasks) throws TaskOverlapException {
+        if (prioritizedTasks.isEmpty()) {
+            return; // Если нет задач, просто выходим
+        }
+
+        // Получаем итератор для доступа к задачам
+        Iterator<Task> iterator = prioritizedTasks.iterator();
+        Task previousTask = iterator.next(); // Получаем первую задачу
+
+        while (iterator.hasNext()) {
+            Task currentTask = iterator.next();
+
+            // Проверяем, пересекаются ли временные отрезки
+            if (previousTask.getEndTime().isAfter(currentTask.getStartTime())) {
+                throw new TaskOverlapException("Перекрытие задач: " + previousTask.getName() + " и " + currentTask.getName());
+            }
+
+            // Обновляем previousTask для следующей итерации
+            previousTask = currentTask;
+        }
+    }
 
 
-        @Override
+
+
+    @Override
         public ArrayList<SubTask> getSubtaskByEpic(Epic epic) { // Получение подзадач определенного эпика
         return epic.getSubtasks();
         }
 
-        @Override
-        public void updateTask(Task task, Task taskNew) {  // Обновление обычной задачи
-        tasks.put(task.getId(), taskNew);
+    @Override
+    public void updateTask(Task task, Task taskNew) {
+        if (!tasks.containsKey(task.getId())) {
+            throw new IllegalArgumentException("Задача с указанным ID не найдена");
         }
 
-        @Override
-        public void updateSubTask(SubTask subTask, SubTask subTaskNew) { // Обновление подзадачи
+        Set<Task> prioritizedTasks = getPrioritizedTasks();
+        prioritizedTasks.remove(task);
+
+        try {
+            doTaskOverlap((TreeSet<Task>) prioritizedTasks); // Проверка перекрытия
+        } catch (TaskOverlapException e) {
+            throw new IllegalArgumentException("Задача пересекается с существующей задачей: " + e.getMessage());
+        }
+
+        tasks.put(task.getId(), taskNew);
+    }
+
+    @Override
+    public void updateSubTask(SubTask subTask, SubTask subTaskNew) {
+        if (!subtasks.containsKey(subTask.getId())) {
+            throw new IllegalArgumentException("Подзадача с указанным ID не найдена");
+        }
+
+        Set<Task> prioritizedTasks = getPrioritizedTasks();
+        prioritizedTasks.remove(subTask);
+
+        try {
+            doTaskOverlap((TreeSet<Task>) prioritizedTasks); // Проверка перекрытия
+        } catch (TaskOverlapException e) {
+            throw new IllegalArgumentException("Подзадача пересекается с существующей подзадачей: " + e.getMessage());
+        }
+
         subtasks.put(subTask.getId(), subTaskNew);
         Epic epic = epics.get(subTask.getEpicId());
         epic.removeSubtask(subTask);
         epic.addSubtask(subTaskNew);
         epics.put(epic.getId(), epic);
-        }
+    }
 
         @Override
         public List<Task> getHistory() {

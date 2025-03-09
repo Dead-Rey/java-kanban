@@ -2,19 +2,52 @@ package main.java.controllers.model;
 
 import main.fileManagers.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
     private int id;
     private final String name;
     private final String description;
     private Progress progress;
+    private Duration duration;
+    private LocalDateTime startTime;
 
 
-    public Task(String name, String description, Progress progress) {
+    public Task(String name, String description, Progress progress, Duration duration, LocalDateTime startTime) {
         this.progress = progress;
         this.name = name;
         this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public long getDurationInMinutes() {
+        return duration.toMinutes();
+    }
+
+    public void setDurationOfMinutes(long minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public int getId() {
@@ -48,7 +81,8 @@ public class Task {
 
     @Override
     public String toString() { // Переопределение метода для адекватной печати имени класса
-        return String.format("%s,%s,%s,%s,%s", getId(), TaskType.TASK, getName(), getProgress(), getDescription());
+        return String.format("%s,%s,%s,%s,%s,%s,%s", getId(), TaskType.TASK, getName(), getProgress(),
+                getDescription(),getDurationInMinutes(),getStartTime());
     }
 
     public String getName() {
@@ -57,6 +91,11 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return this.startTime.compareTo(o.startTime);
     }
 }
 

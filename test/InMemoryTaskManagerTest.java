@@ -1,5 +1,4 @@
 import main.java.controllers.InMemoryTaskManager;
-import main.java.controllers.TaskManager;
 import main.java.controllers.model.Epic;
 import main.java.controllers.model.Progress;
 import main.java.controllers.model.SubTask;
@@ -7,96 +6,126 @@ import main.java.controllers.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryTaskManagerTest {
-    private TaskManager taskManager;
+public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
+
     public void setUp() {
-        taskManager = new InMemoryTaskManager();
+        taskManager = new InMemoryTaskManager(); // Инициализация конкретной реализации
     }
 
     @Test
     public void testAddTask() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
-        taskManager.addTask(task);
-        assertEquals(1, taskManager.getTasks().size());
-        assertEquals(task, taskManager.getTasks().get(0));
+        Task task = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
+        super.testAddTask(task); // Вызов метода из абстрактного класса
     }
 
     @Test
     public void testAddEpic() {
-        Epic epic = new Epic("Test Epic", "Description");
-        taskManager.addEpic(epic);
-        assertEquals(1, taskManager.getEpics().size());
-        assertEquals(epic, taskManager.getEpics().get(0));
+        Epic epic = new Epic("Epic 1", "Epic Description");
+        super.testAddEpic(epic); // Вызов метода из абстрактного класса
     }
 
     @Test
-    public void testAddSubtask() {
-        Epic epic = new Epic("Test Epic", "Description");
+    public void testAddSubtaskWithEpic() {
+        Epic epic = new Epic("Epic 1", "Epic Description");
         taskManager.addEpic(epic);
-        SubTask subTask = new SubTask("Test Subtask", "Description", Progress.NEW, epic.getId());
-        taskManager.addSubtask(subTask);
-        assertEquals(1, taskManager.getSubtasks().size());
-        assertEquals(subTask, taskManager.getSubtasks().get(0));
+        SubTask subTask = new SubTask("Subtask 1", "Subtask Description",Progress.NEW, epic.getId(),
+                Duration.ofHours(1), LocalDateTime.now());
+        super.testAddSubtaskWithEpic(subTask, epic); // Вызов метода из абстрактного класса
     }
 
     @Test
-    public void testDeleteTask() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
+    public void testDeleteTaskById() {
+        Task task = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
         taskManager.addTask(task);
-        taskManager.deleteTask();
+        taskManager.deleteTaskById(task.getId());
+
+        assertNull(taskManager.getTaskById(task.getId()));
         assertEquals(0, taskManager.getTasks().size());
     }
 
     @Test
-    public void testDeleteEpic() {
-        Epic epic = new Epic("Test Epic", "Description");
+    public void testDeleteEpicWithSubtasks() {
+        Epic epic = new Epic("Epic 1", "Epic Description");
         taskManager.addEpic(epic);
+        SubTask subTask = new SubTask("Subtask 1", "Subtask Description", Progress.NEW, epic.getId(),
+                Duration.ofHours(1), LocalDateTime.now());
+        taskManager.addSubtask(subTask);
+
         taskManager.deleteEpic();
+
         assertEquals(0, taskManager.getEpics().size());
-    }
-
-    @Test
-    public void testGetTaskById() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
-        taskManager.addTask(task);
-        Task retrievedTask = taskManager.getTaskById(task.getId());
-        assertEquals(task, retrievedTask);
-    }
-
-    @Test
-    public void testUpdateTask() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
-        taskManager.addTask(task);
-        Task updatedTask = new Task("Updated Task", "New Description", Progress.IN_PROGRESS);
-        updatedTask.setId(task.getId());
-        taskManager.updateTask(task, updatedTask);
-        assertEquals(updatedTask, taskManager.getTaskById(task.getId()));
+        assertEquals(0, taskManager.getSubtasks().size());
     }
 
     @Test
     public void testGetHistory() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
-        taskManager.addTask(task);
-        taskManager.getTaskById(task.getId());
-        assertEquals(1, taskManager.getHistory().size());
-        assertEquals(task, taskManager.getHistory().get(0));
+        Task task = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
+        super.testGetHistory(task); // Вызов метода из абстрактного класса
     }
 
     @Test
-    public void testGetSubtaskByEpic() {
-        Epic epic = new Epic("Test Epic", "Description");
+    public void testTaskOverlap() {
+        Task task1 = new Task("Task 1", "Description 1",Progress.NEW,
+                Duration.ofHours(2),LocalDateTime.of(2023, 10, 1, 10, 0));
+        Task task2 = new Task("Task 2", "Description 2", Progress.NEW, Duration.ofHours(2),
+                LocalDateTime.of(2023, 10, 1, 11, 0));
+
+        taskManager.addTask(task1);
+        assertThrows(IllegalArgumentException.class, () -> taskManager.addTask(task2));
+    }
+
+    @Test
+    public void testUpdateTask() {
+        Task task = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
+        taskManager.addTask(task);
+
+        Task updatedTask = new Task("Updated Task", "Updated Description",
+                Progress.DONE, Duration.ofHours(1), LocalDateTime.now());
+        taskManager.updateTask(task, updatedTask);
+
+        assertEquals(updatedTask, taskManager.getTaskById(task.getId()));
+    }
+
+    @Test
+    public void testUpdateSubTask() {
+        Epic epic = new Epic("Epic 1", "Epic Description");
         taskManager.addEpic(epic);
-        SubTask subTask = new SubTask("Test Subtask", "Description", Progress.NEW, epic.getId());
+        SubTask subTask = new SubTask("Subtask 1", "Subtask Description", Progress.NEW, epic.getId(),
+                Duration.ofHours(1), LocalDateTime.now());
         taskManager.addSubtask(subTask);
-        epic.addSubtask(subTask);
-        ArrayList<SubTask> subtasks = taskManager.getSubtaskByEpic(epic);
-        assertEquals(1, subtasks.size());
-        assertEquals(subTask, subtasks.get(0));
+
+        SubTask updatedSubTask = new SubTask("Updated Subtask", "Updated Description",
+                Progress.IN_PROGRESS, epic.getId(), Duration.ofHours(1), LocalDateTime.now());
+        taskManager.updateSubTask(subTask, updatedSubTask);
+
+        assertEquals(updatedSubTask, taskManager.getSubtaskByEpic(epic).get(0));
+    }
+    @Test
+    public void testDeleteAllTasks() {
+        // Добавляем несколько задач
+        Task task1 = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
+        Task task2 = new Task("Task 2", "Description 2", Progress.NEW,
+                Duration.ofHours(2), LocalDateTime.now().plusHours(1));
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+
+        // Теперь вызываем метод удаления всех задач из абстрактного класса
+        super.testDeleteTask(); // Вызов метода из абстрактного класса
     }
 }
+
+
+
