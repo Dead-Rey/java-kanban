@@ -121,18 +121,18 @@ public class InMemoryTaskManager implements TaskManager  {
 
 
     @Override
-    public Task getTaskById(int id) { // Получение любой задачи по ID
+    public Optional<Task> getTaskById(int id) {
         if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
-            return tasks.get(id);
+            return Optional.of(tasks.get(id));
         } else if (subtasks.containsKey(id)) {
             historyManager.add(subtasks.get(id));
-            return subtasks.get(id);
+            return Optional.of(subtasks.get(id));
         } else if (epics.containsKey(id)) {
             historyManager.add(epics.get(id));
-            return epics.get(id);
+            return Optional.of(epics.get(id));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
