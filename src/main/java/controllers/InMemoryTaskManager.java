@@ -32,7 +32,7 @@ public class InMemoryTaskManager implements TaskManager  {
         try {
             doTaskOverlap(task); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей.");
         }
         // Если пересечений не найдено, добавляем задачу в мапу и отсортированный список
         task.setId(idCounter);
@@ -54,7 +54,7 @@ public class InMemoryTaskManager implements TaskManager  {
         try {
             doTaskOverlap(subtask); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей.");
         }
 
         subtask.setId(idCounter);
@@ -190,7 +190,7 @@ public class InMemoryTaskManager implements TaskManager  {
         try {
             doTaskOverlap(taskNew); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей.");
         }
 
         tasks.put(task.getId(), taskNew);
@@ -207,7 +207,7 @@ public class InMemoryTaskManager implements TaskManager  {
         try {
             doTaskOverlap(subTaskNew); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей.");
         }
 
         subtasks.put(subTask.getId(), subTaskNew);
