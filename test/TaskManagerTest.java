@@ -4,6 +4,7 @@ import main.java.controllers.model.SubTask;
 import main.java.controllers.model.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,7 +17,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     public void testAddTask(Task task) {
         taskManager.addTask(task);
         assertEquals(1, taskManager.getTasks().size());
-        assertEquals(task, taskManager.getTaskById(task.getId()));
+        Optional<Task> retrievedTaskOptional = taskManager.getTaskById(task.getId());
+        assertTrue(retrievedTaskOptional.isPresent());
+        Task retrievedTask = retrievedTaskOptional.get();
+        assertEquals(task, retrievedTask);
     }
 
     // Тест для добавления эпика

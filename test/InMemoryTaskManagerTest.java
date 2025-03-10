@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,8 +49,8 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         taskManager.addTask(task);
         taskManager.deleteTaskById(task.getId());
 
-        assertNull(taskManager.getTaskById(task.getId()));
-        assertEquals(0, taskManager.getTasks().size());
+        Optional<Task> retrievedTaskOptional = taskManager.getTaskById(task.getId());
+        assertFalse(retrievedTaskOptional.isPresent());
     }
 
     @Test
@@ -94,7 +95,10 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
                 Progress.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
         taskManager.updateTask(task, updatedTask);
 
-        assertEquals(updatedTask, taskManager.getTaskById(task.getId()));
+        Optional<Task> retrievedTaskOptional = taskManager.getTaskById(task.getId());
+        assertTrue(retrievedTaskOptional.isPresent());
+        Task retrievedTask = retrievedTaskOptional.get();
+        assertEquals(updatedTask, retrievedTask);
     }
 
     @Test

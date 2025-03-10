@@ -12,6 +12,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,8 +80,14 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         System.out.println(loadedManager);
 
         assertEquals(2, loadedManager.getTasks().size());
-        assertEquals(task1, loadedManager.getTaskById(task1.getId()));
-        assertEquals(task2, loadedManager.getTaskById(task2.getId()));
+        Optional<Task> retrievedTaskOptional1 = loadedManager.getTaskById(task1.getId());
+        Optional<Task> retrievedTaskOptional2 = loadedManager.getTaskById(task2.getId());
+        assertTrue(retrievedTaskOptional1.isPresent());
+        assertTrue(retrievedTaskOptional2.isPresent());
+        Task retrievedTask1 = retrievedTaskOptional1.get();
+        Task retrievedTask2 = retrievedTaskOptional2.get();
+        assertEquals(task1, retrievedTask1);
+        assertEquals(task2, retrievedTask2);
         assertEquals(1, loadedManager.getEpics().size());
         assertEquals(epic, loadedManager.getEpics().get(0));
         assertEquals(1, loadedManager.getSubtasks().size());
