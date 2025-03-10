@@ -91,7 +91,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         taskManager.addTask(task);
 
         Task updatedTask = new Task("Updated Task", "Updated Description",
-                Progress.DONE, Duration.ofHours(1), LocalDateTime.now());
+                Progress.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
         taskManager.updateTask(task, updatedTask);
 
         assertEquals(updatedTask, taskManager.getTaskById(task.getId()));
@@ -117,7 +117,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         Task task1 = new Task("Task 1", "Description 1", Progress.NEW,
                 Duration.ofHours(1), LocalDateTime.now());
         Task task2 = new Task("Task 2", "Description 2", Progress.NEW,
-                Duration.ofHours(2), LocalDateTime.now().plusHours(1));
+                Duration.ofHours(2), LocalDateTime.now().plusHours(2));
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);
