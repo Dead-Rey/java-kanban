@@ -5,17 +5,31 @@ import main.fileManagers.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private final ArrayList<SubTask> subTasks;
-    private Duration duration;
 
     public Epic(String name, String description) {
         super(name, description, Progress.NEW, Duration.ZERO, null);
         this.subTasks = new ArrayList<>();
         this.duration = Duration.ZERO;
 
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        List<SubTask> subTasks = getSubtasks();
+        if (subTasks.isEmpty()) {
+            return null;
+        }
+        return subTasks.stream()
+                .filter(subTask -> subTask != null && subTask.getStartTime() != null &&
+                        subTask.getDuration() != null)
+                .map(subTask -> subTask.getStartTime().plus(subTask.getDuration()))
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
     }
 
     private void calculateDuration() {

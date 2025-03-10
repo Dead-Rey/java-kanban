@@ -16,7 +16,6 @@ public class Main {
 
         TaskManager taskManager = Managers.getDefault();
 
-
         Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofHours(1)));
         Task task2 = new Task("Сделать зарядку", "Зарядка в 9:00", Progress.NEW,
@@ -34,7 +33,7 @@ public class Main {
                 LocalDateTime.now().plus(Duration.ofHours(3)));
         SubTask subTask2 = new SubTask("Написать код",
                 "Применить знания полученные при обучении", Progress.NEW, epic1.getId(),
-                Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofHours(3)));
+                Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofHours(4)));
         SubTask subTask3 = new SubTask("Купить продукты",
                 "Сходить в магазин", Progress.NEW, epic1.getId(),Duration.ofMinutes(30),
                 LocalDateTime.now().plus(Duration.ofHours(5)));

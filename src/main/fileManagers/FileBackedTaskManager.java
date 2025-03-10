@@ -59,8 +59,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
        if (manager.toString().equals(newManager.toString())) {
            System.out.println("Всё работает правильно");
       }
-       // System.out.println(manager);
-     // System.out.println(newManager);
     }
 
     private final File file;
@@ -118,8 +116,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
-        setIdCounter(1); // У меня тут вопрос. Без этого обновления счётчика ID, задачи записывались с повышенным ID
-                        // Правильно ли я реализовал данное обновление?
+
+        setIdCounter(1);
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             reader.readLine(); // Пропускаем заголовок

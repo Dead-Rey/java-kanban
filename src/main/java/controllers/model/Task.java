@@ -11,7 +11,7 @@ public class Task implements Comparable<Task> {
     private final String name;
     private final String description;
     private Progress progress;
-    private Duration duration;
+    protected Duration duration;
     private LocalDateTime startTime;
 
 
