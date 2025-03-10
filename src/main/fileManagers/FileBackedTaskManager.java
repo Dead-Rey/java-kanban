@@ -22,7 +22,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
         Task task2 = new Task("Сделать зарядку", "Зарядка в 9:00", Progress.NEW,
-                Duration.ofMinutes(30), LocalDateTime.now().plusHours(4));
+                Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
        manager.addTask(task1);
        manager.addTask(task2);
@@ -35,13 +35,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
        SubTask subTask1 = new SubTask("Разобраться с задачей",
                "Понять что нужно сделать",Progress.NEW, epic1.getId(),
-               Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
+               Duration.ofMinutes(30), LocalDateTime.now().plusHours(2));
        SubTask subTask2 = new SubTask("Написать код",
                "Применить знания полученные при обучении", Progress.NEW, epic1.getId(),
-               Duration.ofMinutes(30), LocalDateTime.now().plusHours(2));
+               Duration.ofMinutes(30), LocalDateTime.now().plusHours(3));
        SubTask subTask3 = new SubTask("Купить продукты",
                "Приготовить салаты", Progress.NEW, epic2.getId(),
-               Duration.ofMinutes(30), LocalDateTime.now().plusHours(2));
+               Duration.ofMinutes(30), LocalDateTime.now().plusHours(4));
 
        manager.addSubtask(subTask1);
        manager.addSubtask(subTask2);

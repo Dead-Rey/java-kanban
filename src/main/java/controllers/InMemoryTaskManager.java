@@ -10,7 +10,7 @@ import java.util.*;
 public class InMemoryTaskManager implements TaskManager  {
     private static int idCounter = 1;
     private final HashMap<Integer, Task> tasks;
-    protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     public static void setIdCounter(int idCounter) {
         InMemoryTaskManager.idCounter = idCounter;
@@ -28,13 +28,11 @@ public class InMemoryTaskManager implements TaskManager  {
 
     @Override
     public void addTask(Task task) {
-        // Получаем отсортированный список всех задач
-        List<Task> prioritizedTasks = getPrioritizedTasks();
-        // Проверяем пересечения
+
         try {
-            doTaskOverlap(prioritizedTasks); // Проверка перекрытия
+            doTaskOverlap(task); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача пересекается с другой задачей: " + e.getMessage());
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
         }
         // Если пересечений не найдено, добавляем задачу в мапу и отсортированный список
         task.setId(idCounter);
@@ -52,12 +50,11 @@ public class InMemoryTaskManager implements TaskManager  {
 
     @Override
     public void addSubtask(SubTask subtask) {
-        List<Task> prioritizedTasks = getPrioritizedTasks();
 
         try {
-            doTaskOverlap(prioritizedTasks); // Проверка перекрытия
+            doTaskOverlap(subtask); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Подзадача пересекается с существующей подзадачей: " + e.getMessage());
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
         }
 
         subtask.setId(idCounter);
@@ -167,25 +164,16 @@ public class InMemoryTaskManager implements TaskManager  {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    public void doTaskOverlap(List<Task> prioritizedTasks) throws TaskOverlapException {
-        if (prioritizedTasks.size() < 2) {
-            return; // Если меньше двух задач, пересечений быть не может
+    public void doTaskOverlap(Task task) throws TaskOverlapException {
+        if (prioritizedTasks.isEmpty() || task.getStartTime() == null || task.getDuration() == null) {
+            return; // Если пусто, или нет времени, то сразу выходим
         }
-
-        Task previousTask = prioritizedTasks.get(0); // Получаем первую задачу
-
-        // Проходим по всем задачам, начиная со второй
-        for (int i = 1; i < prioritizedTasks.size(); i++) {
-            Task currentTask = prioritizedTasks.get(i);
-
-            // Проверяем, пересекаются ли временные отрезки
-            if (previousTask.getEndTime().isAfter(currentTask.getStartTime())) {
-                throw new TaskOverlapException("Перекрытие задач: " + previousTask.getName() + " и " + currentTask.getName());
+            if (prioritizedTasks.getFirst().getStartTime().isAfter(task.getEndTime()) ||
+                    prioritizedTasks.getLast().getEndTime().isBefore(task.getStartTime())) {
+                return;
             }
+        throw new TaskOverlapException(task.getName());
 
-            // Обновляем previousTask для следующей итерации
-            previousTask = currentTask;
-        }
     }
 
     @Override
@@ -199,16 +187,15 @@ public class InMemoryTaskManager implements TaskManager  {
             throw new IllegalArgumentException("Задача с указанным ID не найдена");
         }
 
-        List<Task> prioritizedTasks = getPrioritizedTasks();
-        prioritizedTasks.remove(task);
-
         try {
-            doTaskOverlap(prioritizedTasks); // Проверка перекрытия
+            doTaskOverlap(taskNew); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Задача пересекается с существующей задачей: " + e.getMessage());
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
         }
 
         tasks.put(task.getId(), taskNew);
+        prioritizedTasks.remove(task);
+        prioritizedTasks.add(taskNew);
     }
 
     @Override
@@ -217,13 +204,10 @@ public class InMemoryTaskManager implements TaskManager  {
             throw new IllegalArgumentException("Подзадача с указанным ID не найдена");
         }
 
-        List<Task> prioritizedTasks = getPrioritizedTasks();
-        prioritizedTasks.remove(subTask);
-
         try {
-            doTaskOverlap(prioritizedTasks); // Проверка перекрытия
+            doTaskOverlap(subTaskNew); // Проверка перекрытия
         } catch (TaskOverlapException e) {
-            throw new IllegalArgumentException("Подзадача пересекается с существующей подзадачей: " + e.getMessage());
+            throw new IllegalArgumentException("Задача: " + e.getMessage() + " пересекается с существующей задачей." );
         }
 
         subtasks.put(subTask.getId(), subTaskNew);
@@ -231,6 +215,8 @@ public class InMemoryTaskManager implements TaskManager  {
         epic.removeSubtask(subTask);
         epic.addSubtask(subTaskNew);
         epics.put(epic.getId(), epic);
+        prioritizedTasks.remove(subTask);
+        prioritizedTasks.add(subTaskNew);
     }
 
         @Override

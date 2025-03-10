@@ -73,16 +73,16 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         super.testGetHistory(task); // Вызов метода из абстрактного класса
     }
 
-//    @Test
-//    public void testTaskOverlap() {
-//        Task task1 = new Task("Task 1", "Description 1",Progress.NEW,
-//                Duration.ofHours(2),LocalDateTime.of(2023, 10, 1, 10, 0));
-//        Task task2 = new Task("Task 2", "Description 2", Progress.NEW, Duration.ofHours(2),
-//                LocalDateTime.of(2023, 10, 1, 11, 0));
-//
-//        taskManager.addTask(task1);
-//        assertThrows(IllegalArgumentException.class, () -> taskManager.addTask(task2));
-//    }
+    @Test
+    public void testTaskOverlap() {
+        Task task1 = new Task("Task 1", "Description 1",Progress.NEW,
+                Duration.ofHours(2),LocalDateTime.of(2023, 10, 1, 10, 0));
+        Task task2 = new Task("Task 2", "Description 2", Progress.NEW, Duration.ofHours(2),
+                LocalDateTime.of(2023, 10, 1, 11, 0));
+
+        taskManager.addTask(task1);
+        assertThrows(IllegalArgumentException.class, () -> taskManager.addTask(task2));
+    }
 
     @Test
     public void testUpdateTask() {

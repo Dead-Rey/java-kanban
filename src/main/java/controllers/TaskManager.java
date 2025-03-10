@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
+
     void addTask(Task task);
 
     void addEpic(Epic epic);
