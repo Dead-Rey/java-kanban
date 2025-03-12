@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface TaskManager {
 
+    List<Task> getPrioritizedTasks();
+
     void addTask(Task task);
 
     void addEpic(Epic epic);

@@ -35,15 +35,12 @@ public class Main {
                 "Применить знания полученные при обучении", Progress.NEW, epic1.getId(),
                 Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofHours(4)));
         SubTask subTask3 = new SubTask("Купить продукты",
-                "Сходить в магазин", Progress.NEW, epic1.getId(),Duration.ofMinutes(30),
+                "Сходить в магазин", Progress.NEW, epic2.getId(),Duration.ofMinutes(30),
                 LocalDateTime.now().plus(Duration.ofHours(5)));
         taskManager.addSubtask(subTask1);
         taskManager.addSubtask(subTask2);
         taskManager.addSubtask(subTask3); //Добавление подзадач в менеджер
 
-        epic1.addSubtask(subTask1);
-        epic1.addSubtask(subTask2);
-        epic2.addSubtask(subTask3); //Добавление подзадач в эпик
 
         taskManager.getTaskById(task1.getId());
         taskManager.getTaskById(task2.getId());

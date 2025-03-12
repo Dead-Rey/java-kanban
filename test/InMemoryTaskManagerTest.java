@@ -39,7 +39,10 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         taskManager.addEpic(epic);
         SubTask subTask = new SubTask("Subtask 1", "Subtask Description",Progress.NEW, epic.getId(),
                 Duration.ofHours(1), LocalDateTime.now());
-        super.testAddSubtaskWithEpic(subTask, epic); // Вызов метода из абстрактного класса
+        taskManager.addSubtask(subTask);
+        assertEquals(1, epic.getSubtasks().size());
+        assertTrue(epic.getSubtasks().contains(subTask));
+
     }
 
     @Test
@@ -60,7 +63,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         SubTask subTask = new SubTask("Subtask 1", "Subtask Description", Progress.NEW, epic.getId(),
                 Duration.ofHours(1), LocalDateTime.now());
         taskManager.addSubtask(subTask);
-
+        epic.addSubtask(subTask);
         taskManager.deleteEpic();
 
         assertEquals(0, taskManager.getEpics().size());

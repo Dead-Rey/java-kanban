@@ -1,6 +1,5 @@
 import main.java.controllers.TaskManager;
 import main.java.controllers.model.Epic;
-import main.java.controllers.model.SubTask;
 import main.java.controllers.model.Task;
 
 import java.util.List;
@@ -29,16 +28,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, taskManager.getEpics().size());
         assertEquals(epic, taskManager.getEpics().get(0));
     }
-
-    // Тест для добавления подзадачи к эпикам
-    public void testAddSubtaskWithEpic(SubTask subTask, Epic epic) {
-        taskManager.addEpic(epic);
-        taskManager.addSubtask(subTask);
-        epic.addSubtask(subTask);
-        assertEquals(1, epic.getSubtasks().size());
-        assertTrue(epic.getSubtasks().contains(subTask));
-    }
-
 
     // Тест для удаления всех задач
     public void testDeleteTask() {

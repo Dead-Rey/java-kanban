@@ -50,9 +50,13 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     @Test
     public void testAddSubtaskWithEpic() {
         Epic epic = new Epic("Test Epic", "Epic Description");
+        taskManager.addEpic(epic);
         SubTask subTask = new SubTask("Test Subtask", "Subtask Description",
                 Progress.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
-        testAddSubtaskWithEpic(subTask, epic);
+        taskManager.addSubtask(subTask);
+        assertEquals(1, epic.getSubtasks().size());
+        assertTrue(epic.getSubtasks().contains(subTask));
+
     }
 
     @Test
