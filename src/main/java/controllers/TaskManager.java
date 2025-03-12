@@ -6,8 +6,12 @@ import main.java.controllers.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskManager {
+
+    List<Task> getPrioritizedTasks();
+
     void addTask(Task task);
 
     void addEpic(Epic epic);
@@ -26,7 +30,7 @@ public interface TaskManager {
 
     void deleteEpic();
 
-    Task getTaskById(int id);
+    Optional<Task> getTaskById(int id);
 
     void deleteTaskById(int id);
 

@@ -4,6 +4,8 @@ import main.java.controllers.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +20,8 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testAddTaskToHistory() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
+        Task task = new Task("Test Task", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task.setId(1);
         historyManager.add(task);
 
@@ -29,9 +32,11 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testRemoveTaskFromHistory() {
-        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW,
+                Duration.ofMinutes(30), LocalDateTime.now());
         task2.setId(2);
 
         historyManager.add(task1);
@@ -51,9 +56,11 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testLinkLast() {
-        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW,
+                Duration.ofMinutes(30), LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task2.setId(2);
 
         historyManager.add(task1);
@@ -67,11 +74,14 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testRemoveNode() {
-        Task task1 = new Task("Test Task 1", "Description", Progress.NEW);
+        Task task1 = new Task("Test Task 1", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Test Task 2", "Description", Progress.NEW);
+        Task task2 = new Task("Test Task 2", "Description", Progress.NEW,
+                Duration.ofMinutes(30), LocalDateTime.now());
         task2.setId(2);
-        Task task3 = new Task("Test Task 3", "Description", Progress.NEW);
+        Task task3 = new Task("Test Task 3", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task3.setId(3);
 
         historyManager.add(task1);
@@ -87,7 +97,8 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testAddSameTask() {
-        Task task = new Task("Test Task", "Description", Progress.NEW);
+        Task task = new Task("Test Task", "Description", Progress.NEW, Duration.ofMinutes(30),
+                LocalDateTime.now());
         task.setId(1);
         historyManager.add(task);
         historyManager.add(task);
