@@ -8,19 +8,19 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-   private final HashMap<Integer,Node> nodes = new HashMap<>();
+    private final HashMap<Integer, Node> nodes = new HashMap<>();
 
-   private Node head;
-   private Node tail;
+    private Node head;
+    private Node tail;
 
-   @Override
- public void add(Task task) {
-    if (nodes.containsKey(task.getId())) {
-        Node delNode = nodes.get(task.getId());
-        removeNode(delNode);
-    }
-    linkLast(task);
-    nodes.put(task.getId(), tail);
+    @Override
+    public void add(Task task) {
+        if (nodes.containsKey(task.getId())) {
+            Node delNode = nodes.get(task.getId());
+            removeNode(delNode);
+        }
+        linkLast(task);
+        nodes.put(task.getId(), tail);
     }
 
     @Override
@@ -37,26 +37,26 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-   void linkLast(Task task) {
-       Node newNode = new Node(task);
-       if (tail == null) {
-           head = newNode;
-       } else {
-           tail.next = newNode;
-           newNode.prev = tail;
-       }
-       tail = newNode;
-   }
+    void linkLast(Task task) {
+        Node newNode = new Node(task);
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+        }
+        tail = newNode;
+    }
 
     List<Task> getTasks() {
-       List<Task> tasks = new ArrayList<>();
-       Node current = head;
-       while (current != null) {
-           tasks.add(current.task);
-           current = current.next;
-       }
-       return tasks;
-   }
+        List<Task> tasks = new ArrayList<>();
+        Node current = head;
+        while (current != null) {
+            tasks.add(current.task);
+            current = current.next;
+        }
+        return tasks;
+    }
 
     void removeNode(Node node) {
         if (node == null) {

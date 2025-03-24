@@ -1,19 +1,36 @@
-package main;
+package main.server;
 
+import com.sun.net.httpserver.HttpServer;
 import main.java.controllers.Managers;
 import main.java.controllers.TaskManager;
 import main.java.controllers.model.Epic;
 import main.java.controllers.model.Progress;
 import main.java.controllers.model.SubTask;
 import main.java.controllers.model.Task;
+import main.server.handlers.*;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class Main {
+public class HttpTaskServer {
 
-    public static void main(String[] args) {
+    private static final int PORT = 8080;
+    HttpServer server;
+    TaskManager taskManager;
 
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this.taskManager = taskManager;
+        server = HttpServer.create(new InetSocketAddress(PORT), 0);
+        server.createContext("/tasks", new TaskHandler(taskManager));
+        server.createContext("/subtasks", new SubTaskHandler(taskManager));
+        server.createContext("/epics", new EpicHandler(taskManager));
+        server.createContext("/prioritized", new PrioritizedHandler(taskManager));
+        server.createContext("/history", new HistoryHandler(taskManager));
+    }
+
+    public static void main(String[] args) throws Exception {
         TaskManager taskManager = Managers.getDefault();
 
         Task task1 = new Task("Покормить кота", "Насыпать корм в миску", Progress.NEW,
@@ -39,58 +56,19 @@ public class Main {
                 LocalDateTime.now().plus(Duration.ofHours(5)));
         taskManager.addSubtask(subTask1);
         taskManager.addSubtask(subTask2);
-        taskManager.addSubtask(subTask3); //Добавление подзадач в менеджер
+        taskManager.addSubtask(subTask3);
 
-
-        taskManager.getTaskById(task1.getId());
-        taskManager.getTaskById(task2.getId());
-        taskManager.getTaskById(epic1.getId());
-        taskManager.getTaskById(epic2.getId());
-        taskManager.getTaskById(task2.getId());
-        taskManager.getTaskById(subTask1.getId());
-        taskManager.getTaskById(subTask2.getId());
-        taskManager.getTaskById(subTask3.getId());
-        taskManager.getTaskById(subTask1.getId());
-
-        printAllTasks(taskManager);
-
-        taskManager.getTaskById(task1.getId());
-        taskManager.getTaskById(subTask1.getId());
-
-        printAllTasks(taskManager);
-
-        taskManager.deleteTaskById(task1.getId());
-
-        printAllTasks(taskManager);
-
-        taskManager.deleteTaskById(epic1.getId());
-
-        printAllTasks(taskManager);
-
+        HttpTaskServer server = new HttpTaskServer(taskManager);
+        server.start();
     }
 
-    public static void printAllTasks(TaskManager manager) {
-        System.out.println("Задачи:");
-        for (Task task : manager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Epic epic : manager.getEpics()) {
-            System.out.println(epic);
-
-            for (Task task : manager.getSubtaskByEpic(epic)) {
-                System.out.println("--> " + task);
-            }
-        }
-        System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+    public void start() {
+        server.start();
+        System.out.println("Server started on port " + PORT);
     }
 
+    public void stop() {
+        server.stop(0);
+        System.out.println("Server stopped");
+    }
 }

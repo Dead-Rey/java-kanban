@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManagersTest {
 
@@ -22,7 +22,7 @@ class ManagersTest {
     @Test
     void getDefaultHistory() {
         TaskManager taskManager = Managers.getDefault();
-        Task task1 = new Task("TestTask_1","TestTaskDescription", Progress.NEW,
+        Task task1 = new Task("TestTask_1", "TestTaskDescription", Progress.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
         taskManager.addTask(task1);
         assertNotNull(Managers.getDefaultHistory());
