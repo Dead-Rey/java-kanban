@@ -15,7 +15,7 @@ import static main.server.Endpoints.*;
 
 public class SubTaskHandler extends BaseHttpHandler {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public SubTaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -30,7 +30,7 @@ public class SubTaskHandler extends BaseHttpHandler {
             case GET_BY_ID -> getSubTask(exchange, getId(path));
             case POST -> postSubTask(exchange);
             case DELETE_BY_ID -> deleteSubTask(exchange, getId(path));
-            default -> sendBadRequest(exchange);
+            default -> sendMethodNotAllowed(exchange);
         }
     }
 
@@ -77,7 +77,7 @@ public class SubTaskHandler extends BaseHttpHandler {
         String strTask = new String(stream.readAllBytes());
 
         if (strTask.isEmpty()) {
-            sendBadRequest(exchange); // Используем 400 Bad Request вместо 404
+            sendNotFound(exchange);
             return;
         }
 

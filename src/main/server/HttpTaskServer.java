@@ -17,11 +17,9 @@ import java.time.LocalDateTime;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    HttpServer server;
-    TaskManager taskManager;
+    private HttpServer server;
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
-        this.taskManager = taskManager;
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
         server.createContext("/tasks", new TaskHandler(taskManager));
         server.createContext("/subtasks", new SubTaskHandler(taskManager));

@@ -40,6 +40,10 @@ public abstract class BaseHttpHandler implements HttpHandler {
         sendText(httpExchange, "Некорректные данные", 400);
     }
 
+    protected void sendMethodNotAllowed(HttpExchange httpExchange) throws IOException {
+        sendText(httpExchange, "Метод не найден", 405);
+    }
+
     protected int getId(String path) throws IOException {
         String[] arrayPath = path.split("/");
         return Integer.parseInt(arrayPath[2]);

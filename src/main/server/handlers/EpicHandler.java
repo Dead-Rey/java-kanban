@@ -16,7 +16,7 @@ import static main.server.Endpoints.*;
 
 public class EpicHandler extends BaseHttpHandler {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -29,10 +29,10 @@ public class EpicHandler extends BaseHttpHandler {
         switch (endpoint) {
             case GET -> getEpics(exchange);
             case GET_BY_ID -> getTask(exchange, getId(path));
-            case GET_SUBTASKS_BY_EPIC_ID -> getSubtasksById(exchange, getId(path));
+            case GET_SUBTASKS_BY_EPIC_ID -> getSubtasksByEpic(exchange);
             case POST -> postEpic(exchange);
             case DELETE_BY_ID -> deleteTask(exchange, getId(path));
-            default -> sendBadRequest(exchange);
+            default -> sendMethodNotAllowed(exchange);
         }
     }
 
@@ -76,7 +76,7 @@ public class EpicHandler extends BaseHttpHandler {
         }
     }
 
-    private void getSubtasksById(HttpExchange exchange, int id) throws IOException {
+    private void getSubtasksByEpic(HttpExchange exchange) throws IOException {
         String strEpic = new String(exchange.getRequestBody().readAllBytes());
         Epic epic = gson.fromJson(strEpic, Epic.class);
         ArrayList<SubTask> subTasks = taskManager.getSubtaskByEpic(epic);

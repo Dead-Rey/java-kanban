@@ -10,7 +10,7 @@ import static main.server.Endpoints.GET;
 
 public class PrioritizedHandler extends BaseHttpHandler {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public PrioritizedHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -23,7 +23,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
         if (endpoint != null) {
             getPrioritized(exchange);
         } else {
-            sendBadRequest(exchange);
+            sendMethodNotAllowed(exchange);
         }
     }
 

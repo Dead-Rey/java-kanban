@@ -11,7 +11,7 @@ import static main.server.Endpoints.GET;
 
 public class HistoryHandler extends BaseHttpHandler {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -24,7 +24,7 @@ public class HistoryHandler extends BaseHttpHandler {
         if (Objects.requireNonNull(endpoint) == GET) {
             getHistory(exchange);
         } else {
-            sendBadRequest(exchange);
+            sendMethodNotAllowed(exchange);
         }
     }
 

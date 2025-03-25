@@ -14,7 +14,7 @@ import static main.server.Endpoints.*;
 
 public class TaskHandler extends BaseHttpHandler {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public TaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -29,7 +29,7 @@ public class TaskHandler extends BaseHttpHandler {
             case GET_BY_ID -> getTask(exchange, getId(path));
             case POST -> postTask(exchange);
             case DELETE_BY_ID -> deleteTask(exchange, getId(path));
-            default -> sendBadRequest(exchange);
+            default -> sendMethodNotAllowed(exchange);
         }
     }
 
@@ -76,7 +76,7 @@ public class TaskHandler extends BaseHttpHandler {
         String strTask = new String(stream.readAllBytes());
 
         if (strTask.isEmpty()) {
-            sendBadRequest(exchange);
+            sendNotFound(exchange);
             return;
         }
 
