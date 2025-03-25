@@ -8,15 +8,10 @@ import main.java.controllers.model.Task;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class InMemoryTaskManager implements TaskManager  {
+public class InMemoryTaskManager implements TaskManager {
     private static int idCounter = 1;
-    private final HashMap<Integer, Task> tasks;
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-
-    public static void setIdCounter(int idCounter) {
-        InMemoryTaskManager.idCounter = idCounter;
-    }
-
+    private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subtasks;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
@@ -25,6 +20,10 @@ public class InMemoryTaskManager implements TaskManager  {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
+    }
+
+    public static void setIdCounter(int idCounter) {
+        InMemoryTaskManager.idCounter = idCounter;
     }
 
     @Override
@@ -42,11 +41,11 @@ public class InMemoryTaskManager implements TaskManager  {
     }
 
 
-   @Override
-   public void addEpic(Epic epic) { // Добавление эпика + присваивание уникального ID
-       epic.setId(idCounter);
-       epics.put(idCounter++, epic);
-   }
+    @Override
+    public void addEpic(Epic epic) { // Добавление эпика + присваивание уникального ID
+        epic.setId(idCounter);
+        epics.put(idCounter++, epic);
+    }
 
     @Override
     public void addSubtask(SubTask subtask) {
@@ -63,7 +62,7 @@ public class InMemoryTaskManager implements TaskManager  {
         prioritizedTasks.add(subtask);
 
         Epic epic = epics.get(subtask.getEpicId());
-            epic.addSubtask(subtask);
+        epic.addSubtask(subtask);
     }
 
 
@@ -199,9 +198,9 @@ public class InMemoryTaskManager implements TaskManager  {
     }
 
     @Override
-        public ArrayList<SubTask> getSubtaskByEpic(Epic epic) { // Получение подзадач определенного эпика
+    public ArrayList<SubTask> getSubtaskByEpic(Epic epic) { // Получение подзадач определенного эпика
         return epic.getSubtasks();
-        }
+    }
 
     @Override
     public void updateTask(Task task, Task taskNew) {
@@ -243,11 +242,10 @@ public class InMemoryTaskManager implements TaskManager  {
         prioritizedTasks.add(subTaskNew);
     }
 
-        @Override
-        public List<Task> getHistory() {
+    @Override
+    public List<Task> getHistory() {
         return historyManager.getHistory();
-        }
-
+    }
 
 
     @Override

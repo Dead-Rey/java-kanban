@@ -37,7 +37,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
     public void testAddSubtaskWithEpic() {
         Epic epic = new Epic("Epic 1", "Epic Description");
         taskManager.addEpic(epic);
-        SubTask subTask = new SubTask("Subtask 1", "Subtask Description",Progress.NEW, epic.getId(),
+        SubTask subTask = new SubTask("Subtask 1", "Subtask Description", Progress.NEW, epic.getId(),
                 Duration.ofHours(1), LocalDateTime.now());
         taskManager.addSubtask(subTask);
         assertEquals(1, epic.getSubtasks().size());
@@ -79,8 +79,8 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void testTaskOverlap() {
-        Task task1 = new Task("Task 1", "Description 1",Progress.NEW,
-                Duration.ofHours(2),LocalDateTime.of(2023, 10, 1, 10, 0));
+        Task task1 = new Task("Task 1", "Description 1", Progress.NEW,
+                Duration.ofHours(2), LocalDateTime.of(2023, 10, 1, 10, 0));
         Task task2 = new Task("Task 2", "Description 2", Progress.NEW, Duration.ofHours(2),
                 LocalDateTime.of(2023, 10, 1, 11, 0));
 
@@ -118,6 +118,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
         assertEquals(updatedSubTask, taskManager.getSubtaskByEpic(epic).get(0));
     }
+
     @Test
     public void testDeleteAllTasks() {
         // Добавляем несколько задач

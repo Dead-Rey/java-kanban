@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task implements Comparable<Task> {
-    private int id;
     private final String name;
     private final String description;
-    private Progress progress;
     protected Duration duration;
+    private int id;
+    private Progress progress;
     private LocalDateTime startTime;
 
 
@@ -42,12 +42,12 @@ public class Task implements Comparable<Task> {
         this.duration = Duration.ofMinutes(minutes);
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public int getId() {
@@ -58,12 +58,12 @@ public class Task implements Comparable<Task> {
         this.id = id;
     }
 
-    public void setProgress(Progress progress) {
-        this.progress = progress;
-    }
-
     public Progress getProgress() {
         return progress;
+    }
+
+    public void setProgress(Progress progress) {
+        this.progress = progress;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Task implements Comparable<Task> {
     @Override
     public String toString() { // Переопределение метода для адекватной печати имени класса
         return String.format("%s,%s,%s,%s,%s,%s,%s", getId(), TaskType.TASK, getName(), getProgress(),
-                getDescription(),getDurationInMinutes(),getStartTime());
+                getDescription(), getDurationInMinutes(), getStartTime());
     }
 
     public String getName() {
